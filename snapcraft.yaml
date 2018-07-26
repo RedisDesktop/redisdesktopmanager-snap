@@ -1,0 +1,136 @@
+name: redis-desktop-manager
+version: git
+summary: Redis Desktop Manager
+description: Cross-platform GUI management tool for Redis
+
+grade: stable
+confinement: devmode
+
+version-script: |
+  set -x
+  version="0.9"
+  version="${version}$(git describe --tags | sed 's,^v[^-]\+,,')"
+  echo $version
+
+apps:
+  rdm:
+    command: desktop-launch $SNAP/opt/redis-desktop-manager/rdm
+    desktop: usr/share/applications/rdm.desktop
+    plugs: 
+     - home
+     - unity7
+     - opengl
+     - gsettings
+     - network
+     - network-bind
+     - x11
+     - desktop
+     - desktop-legacy
+parts:
+  application:
+    plugin: qmake-rdm
+    source: https://github.com/uglide/RedisDesktopManager.git
+    source-branch: 0.9
+    after: [qt, desktop-gtk3, gcc7]
+    stage-packages:
+     - libc6
+    source-subdir: src
+    project-files: 
+     - rdm.pro
+    qmake-binary: $SNAPCRAFT_STAGE/opt/qt5/bin/qmake
+    override-build: |
+      cd ../src/src && ./configure libssh2 && ./configure breakpad && cd ../../build
+      snapcraftctl build
+      mkdir -p ../install/opt/redis-desktop-manager/lib/plugins
+      cp -R $SNAPCRAFT_STAGE/opt/qt5/qml ../install/opt/redis-desktop-manager/lib/plugins
+  qt:
+    plugin: qtbuilder
+    qt-version: 5.9.6
+    qt-source-git: https://code.qt.io/qt/qt5.git
+    qt-submodules: ['qtbase','qtimageformats', 'qtxmlpatterns', 'qtcharts', 'qtdeclarative', 'qtquickcontrols', 'qtquickcontrols2', 'qtsvg']
+    environment:
+      - CC: gcc-7
+      - CXX: g++-7
+      - QMAKE_CC: gcc-7
+      - QMAKE_CXX: g++-7
+    build-packages:
+      - libdbusmenu-glib-dev
+      - libffi-dev
+      - liblzma-dev
+      - libssl-dev
+      - libx11-xcb-dev
+      - libxcb-icccm4-dev
+      - libxcb-image0-dev
+      - libxcb-keysyms1-dev
+      - libxcb-randr0-dev
+      - libxcb-render-util0-dev
+      - libxcb-sync-dev
+      - libxcb-util0-dev
+      - libxcb-xfixes0-dev
+      - libxcb1-dev
+      - libxrender-dev
+      - libfontconfig1-dev
+    configflags:
+      - -prefix
+      - $SNAPCRAFT_STAGE/opt/qt5
+      - -release
+      - -force-debug-info
+      - -opensource
+      - -confirm-license
+      - -system-freetype
+      - -qt-zlib
+      - -qt-libpng
+      - -qt-libjpeg
+      - -qt-harfbuzz
+      - -qt-pcre
+      - -qt-xcb
+      - -qt-xkbcommon-x11
+      - -no-opengl
+      - -fontconfig
+      - -static
+      - -dbus-runtime
+      - -openssl-linked
+      - -make
+      - qtquickcontrols2
+      - -nomake
+      - examples
+      - -nomake
+      - tests
+    after:
+      - libxkbcommon
+    prime: [-./*]
+  libxkbcommon:
+    source: https://github.com/xkbcommon/libxkbcommon.git
+    source-depth: 1
+    plugin: autotools
+    build-packages:
+      - xutils-dev
+      - bison
+      - python-xcbgen
+    configflags:
+      - --disable-x11
+    prime: [-./*]
+  gcc7:
+    plugin: nil
+    build-packages:
+      - libmpc-dev
+      - libcloog-ppl-dev
+    override-pull: |
+      echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu xenial main" | \
+            sudo tee /etc/apt/sources.list.d/ubuntu-toolchain-r.list
+      sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F
+      sudo apt-get update \
+        -o Dir::Etc::sourcelist="sources.list.d/ubuntu-toolchain-r.list" \
+        -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
+      snapcraftctl pull
+    override-build: |
+      sudo apt install gcc-7 g++-7 -o Debug::pkgProblemResolver=yes --no-install-recommends -y
+      sudo apt-mark auto gcc-7 g++-7
+      sudo rm -f /etc/apt/sources.list.d/ubuntu-toolchain-r.list
+      sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 \
+                         --slave /usr/bin/g++ g++ /usr/bin/g++-7 
+      sudo update-alternatives --config gcc
+      gcc --version
+      g++ --version
+      snapcraftctl build
+    prime: [-./*]

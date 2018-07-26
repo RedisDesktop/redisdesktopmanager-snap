@@ -1,1 +1,1 @@
-# redisdesktopmanager-snap
+# Snapcraft packaging for RedisDesktopManager
