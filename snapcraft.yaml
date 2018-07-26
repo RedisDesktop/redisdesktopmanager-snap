@@ -4,12 +4,12 @@ summary: Redis Desktop Manager
 description: Cross-platform GUI management tool for Redis
 
 grade: stable
-confinement: devmode
+confinement: strict
 
 version-script: |
   set -x
   version="0.9"
-  version="${version}$(git describe --tags | sed 's,^v[^-]\+,,')"
+  version="${version}.$(git describe --tags | sed 's,^v[^-]\+,,')"
   echo $version
 
 apps:
