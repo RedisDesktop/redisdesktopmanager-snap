@@ -7,9 +7,8 @@ grade: stable
 confinement: strict
 
 version-script: |
-  set -x
-  version="0.9"
-  version="${version}.$(git describe --tags | sed 's,^v[^-]\+,,')"
+  set -x  
+  version="$(git describe --abbrev=0 --tags).$(git rev-parse --short HEAD)"
   echo $version
 
 apps:
