@@ -89,9 +89,7 @@ parts:
       - -fontconfig
       - -static
       - -dbus-runtime
-      - -openssl-linked
-      - -make
-      - qtquickcontrols2
+      - -openssl-linked      
       - -nomake
       - examples
       - -nomake
