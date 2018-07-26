@@ -30,7 +30,7 @@ parts:
   application:
     plugin: qmake-rdm
     source: https://github.com/uglide/RedisDesktopManager.git
-    source-branch: 0.9
+    source-branch: '0.9'
     after: [qt, desktop-gtk3, gcc7]
     stage-packages:
      - libc6
