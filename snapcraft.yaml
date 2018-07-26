@@ -39,7 +39,7 @@ parts:
      - rdm.pro
     qmake-binary: $SNAPCRAFT_STAGE/opt/qt5/bin/qmake
     override-build: |
-      ./configure libssh2 && ./configure breakpad
+      cd ../src/src && ./configure libssh2 && ./configure breakpad && cd ../../build
       snapcraftctl build
       mkdir -p ../install/opt/redis-desktop-manager/lib/plugins
       cp -R $SNAPCRAFT_STAGE/opt/qt5/qml ../install/opt/redis-desktop-manager/lib/plugins
@@ -70,6 +70,7 @@ parts:
       - libxcb1-dev
       - libxrender-dev
       - libfontconfig1-dev
+      - cmake
     configflags:
       - -prefix
       - $SNAPCRAFT_STAGE/opt/qt5
