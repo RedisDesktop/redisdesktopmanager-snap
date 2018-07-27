@@ -1,5 +1,5 @@
 name: redis-desktop-manager
-version: git
+version: 0.9.3+git
 summary: Redis Desktop Manager
 description: Cross-platform GUI management tool for Redis
 
@@ -8,7 +8,7 @@ confinement: strict
 
 version-script: |
   set -x  
-  version="$(git describe --abbrev=0 --tags)-$(git rev-parse --short HEAD)"
+  version=""
   echo $version
 
 apps:
@@ -31,6 +31,8 @@ parts:
     source: https://github.com/uglide/RedisDesktopManager.git
     source-branch: '0.9'
     after: [qt, desktop-gtk3, gcc7]
+    build-packages:
+     - python
     stage-packages:
      - libc6
     source-subdir: src
@@ -38,7 +40,11 @@ parts:
      - rdm.pro
     qmake-binary: $SNAPCRAFT_STAGE/opt/qt5/bin/qmake
     override-build: |
-      cd ../src/src && ./configure libssh2 && ./configure breakpad && cd ../../build
+      cd ../src/src && ./configure libssh2 && ./configure breakpad && cd ..
+      export RDM_VERSION="$(git describe --abbrev=0 --tags)-$(git rev-parse --short HEAD)"
+      echo "App version: $RDM_VERSION"
+      python build/utils/set_version.py $RDM_VERSION > src/version.h
+      cd ../build
       snapcraftctl build
       mkdir -p ../install/opt/redis-desktop-manager/lib/plugins
       cp -R $SNAPCRAFT_STAGE/opt/qt5/qml ../install/opt/redis-desktop-manager/lib/plugins
