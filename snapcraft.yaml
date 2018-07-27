@@ -8,7 +8,7 @@ confinement: strict
 
 version-script: |
   set -x  
-  version="$(git describe --abbrev=0 --tags).$(git rev-parse --short HEAD)"
+  version="$(git describe --abbrev=0 --tags)-$(git rev-parse --short HEAD)"
   echo $version
 
 apps:
