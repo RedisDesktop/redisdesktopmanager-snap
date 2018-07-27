@@ -20,6 +20,10 @@ apps:
      - x11
      - desktop
      - desktop-legacy
+    environment:
+      DISABLE_WAYLAND: 1
+      WAYLAND_DISPLAY: no-display
+      QTCOMPOSE: $SNAP/usr/share/X11/locale     
 parts:
   application:
     plugin: qmake-rdm
