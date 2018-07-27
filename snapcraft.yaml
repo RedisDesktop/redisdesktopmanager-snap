@@ -47,7 +47,16 @@ parts:
     plugin: qtbuilder
     qt-version: 5.9.6
     qt-source-git: https://code.qt.io/qt/qt5.git
-    qt-submodules: ['qtbase','qtimageformats', 'qtxmlpatterns', 'qtcharts', 'qtdeclarative', 'qtquickcontrols', 'qtquickcontrols2', 'qtsvg']
+    qt-submodules:
+      - qtbase
+      - qtimageformats
+      - qtxmlpatterns
+      - qtcharts
+      - qtdeclarative
+      - qtquickcontrols
+      - qtquickcontrols2
+      - qtgraphicaleffects
+      - qtsvg
     environment:
       - CC: gcc-7
       - CXX: g++-7
