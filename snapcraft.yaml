@@ -1,5 +1,5 @@
 name: redis-desktop-manager
-version: 0.9.6+git
+version: 0.9.7+git
 summary: Redis Desktop Manager
 description: Cross-platform GUI management tool for Redis
 
