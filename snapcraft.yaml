@@ -5,7 +5,6 @@ description: Cross-platform GUI management tool for Redis
 
 grade: stable
 confinement: strict
-architectures: [amd64, i386]
 
 apps:
   rdm:
