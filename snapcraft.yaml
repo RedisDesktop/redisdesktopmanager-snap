@@ -41,7 +41,7 @@ parts:
      - rdm.pro
     qmake-binary: $SNAPCRAFT_STAGE/opt/qt5/bin/qmake
     override-build: |
-      cd ../src/src && ./configure libssh2 && ./configure breakpad && cd ..
+      cd ../src/src && ./configure libssh2 && ./configure breakpad && $SNAPCRAFT_STAGE/opt/qt5/bin/lrelease rdm.pro && cd ..
       sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
       export RDM_VERSION="$(git describe --abbrev=0 --tags)-$(git rev-parse --short HEAD)"
       echo "App version: $RDM_VERSION"
@@ -79,6 +79,7 @@ parts:
       - qtquickcontrols2
       - qtgraphicaleffects
       - qtsvg
+      - qttools
     environment:
       - CC: gcc-7
       - CXX: g++-7
