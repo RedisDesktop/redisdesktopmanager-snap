@@ -28,7 +28,7 @@ parts:
   application:
     plugin: qmake-rdm
     source: https://github.com/uglide/RedisDesktopManager.git
-    source-branch: 'formatters_upgrade'
+    source-branch: '0.9'
     after: [qt, desktop-gtk3, gcc7]
     build-packages:
      - python3
