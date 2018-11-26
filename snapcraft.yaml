@@ -29,19 +29,21 @@ parts:
     plugin: qmake-rdm
     source: https://github.com/uglide/RedisDesktopManager.git
     source-branch: '0.9'
-    after: [qt, desktop-gtk3, gcc7]
+    after: [qt, desktop-gtk3, gcc7, botan]
     build-packages:
      - python3
      - git
      - virtualenv
-    stage-packages:
-     - libc6
+     - wget
+     - unzip
     source-subdir: src
     project-files: 
      - rdm.pro
     qmake-binary: $SNAPCRAFT_STAGE/opt/qt5/bin/qmake
     override-build: |
-      cd ../src/src && ./configure libssh2 && ./configure breakpad && $SNAPCRAFT_STAGE/opt/qt5/bin/lrelease rdm.pro && cd ..
+      cd ../src
+      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1fKu7o2ci2nCMgROsyBpYGOyplvhZFowd" && unzip -o deps.zip && popd'
+      bash -c 'pushd ./src && ./configure breakpad && $SNAPCRAFT_STAGE/opt/qt5/bin/lrelease rdm.pro && popd'
       sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
       export RDM_VERSION="$(git describe --abbrev=0 --tags)-$(git rev-parse --short HEAD)"
       echo "App version: $RDM_VERSION"
@@ -52,6 +54,16 @@ parts:
       cp -R $SNAPCRAFT_STAGE/opt/qt5/qml ../install/opt/redis-desktop-manager/lib/plugins
       cd ../install/opt/redis-desktop-manager/
       git clone --recursive --depth=1 https://github.com/RedisDesktop/rdm-native-value-formatters.git formatters
+  botan:
+    plugin: make
+    build-packages:
+      - python
+    source: https://github.com/randombit/botan.git
+    override-build: |
+      export CC=gcc-5
+      export CXX=g++-5
+      python configure.py --prefix=/usr
+      snapcraftctl build
   formatters:    
     source: https://github.com/RedisDesktop/rdm-native-value-formatters.git
     plugin: python
