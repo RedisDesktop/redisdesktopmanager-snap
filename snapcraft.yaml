@@ -48,7 +48,7 @@ parts:
     qmake-binary: $SNAPCRAFT_STAGE/opt/qt5/bin/qmake
     override-build: |
       cd ../src
-      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1fKu7o2ci2nCMgROsyBpYGOyplvhZFowd" && unzip -o deps.zip && popd'
+      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1VIIeORVl19ckupYdrCb1zrmpKmWz8wWq" && unzip -o deps.zip && popd'
       bash -c 'pushd ./src && ./configure breakpad && $SNAPCRAFT_STAGE/opt/qt5/bin/lrelease rdm.pro && popd'
       sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
       export RDM_VERSION="$(git describe --abbrev=0 --tags)-$(git rev-parse --short HEAD)"
