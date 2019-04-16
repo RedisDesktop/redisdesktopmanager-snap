@@ -6,10 +6,9 @@ description: Cross-platform GUI management tool for Redis
 grade: stable
 confinement: strict
 
-
 plugs:
   personal-files:
-    read: [$HOME/.ssh, $HOME/.rdm]
+    read: [$HOME/.rdm]
 
 apps:
   rdm:
@@ -25,7 +24,8 @@ apps:
      - x11
      - desktop
      - desktop-legacy
-     - personal-files
+     - ssh-keys
+     - personal-files     
     environment:
       DISABLE_WAYLAND: 1
       WAYLAND_DISPLAY: no-display
