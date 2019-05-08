@@ -20,7 +20,11 @@ apps:
      - x11
      - desktop
      - desktop-legacy
-     - ssh-keys        
+     - ssh-keys     
+     - dot-rdm:       
+       interface: personal-files
+       read:
+       - $HOME/.rdm
     environment:
       DISABLE_WAYLAND: 1
       WAYLAND_DISPLAY: no-display
