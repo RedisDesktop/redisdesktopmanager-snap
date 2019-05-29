@@ -6,6 +6,12 @@ description: Cross-platform GUI management tool for Redis
 grade: stable
 confinement: strict
 
+plugs:
+ - dot-rdm:       
+     interface: personal-files
+     read:
+     - $HOME/.rdm
+
 apps:
   rdm:
     command: desktop-launch $SNAP/opt/redis-desktop-manager/rdm --formatters-dir $SNAP/opt/redis-desktop-manager/formatters --settings-dir $SNAP_USER_COMMON
@@ -21,10 +27,7 @@ apps:
      - desktop
      - desktop-legacy
      - ssh-keys     
-     - dot-rdm:       
-       interface: personal-files
-       read:
-       - $HOME/.rdm
+     - dot-rdm      
     environment:
       DISABLE_WAYLAND: 1
       WAYLAND_DISPLAY: no-display
