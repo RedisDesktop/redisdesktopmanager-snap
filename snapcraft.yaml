@@ -1,5 +1,6 @@
 name: redis-desktop-manager
-version: 2019.1.0+git
+version: 2019
+version-script: cat $SNAPCRAFT_STAGE/version
 summary: Redis Desktop Manager
 description: Cross-platform GUI management tool for Redis
 
@@ -14,7 +15,7 @@ plugs:
 
 apps:
   rdm:
-    command: desktop-launch $SNAP/opt/redis-desktop-manager/rdm --formatters-dir $SNAP/opt/redis-desktop-manager/formatters --settings-dir $SNAP_USER_COMMON
+    command: desktop-launch $SNAP/opt/redis-desktop-manager/rdm --settings-dir $SNAP_USER_COMMON
     desktop: usr/share/applications/rdm.desktop
     plugs: 
      - home
@@ -55,13 +56,12 @@ parts:
       sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
       export RDM_VERSION="$(git describe --abbrev=0 --tags)-$(git rev-parse --short HEAD)"
       echo "App version: $RDM_VERSION"
+      echo $RDM_VERSION > $SNAPCRAFT_STAGE/version
       python build/utils/set_version.py $RDM_VERSION > src/version.h
       cd ../build
       snapcraftctl build
       mkdir -p ../install/opt/redis-desktop-manager/lib/plugins
       cp -R $SNAPCRAFT_STAGE/opt/qt5/qml ../install/opt/redis-desktop-manager/lib/plugins
-      cd ../install/opt/redis-desktop-manager/
-      git clone --recursive --depth=1 https://github.com/RedisDesktop/rdm-native-value-formatters.git formatters
   botan:
     plugin: make
     build-packages:
@@ -73,21 +73,13 @@ parts:
       python configure.py --prefix=/usr
       snapcraftctl build
   formatters:    
-    source: https://github.com/RedisDesktop/rdm-native-value-formatters.git
+    source: . 
     plugin: python
     python-version: python3
-    python-packages:
-      - msgpack-python
-      - lz4
-      - cffi
-      - python-snappy
-      - cbor
-      - bitstring
-    build-packages: [libsnappy-dev]
-    stage-packages: [libsnappy-dev]
+    requirements: $SNAPCRAFT_PART_SRC/../../application/src/src/py/requirements.txt
   qt:
     plugin: qtbuilder
-    qt-version: 5.9.7
+    qt-version: 5.9.8
     qt-source-git: https://code.qt.io/qt/qt5.git
     qt-submodules:
       - qtbase
