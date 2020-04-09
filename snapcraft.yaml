@@ -1,5 +1,5 @@
 name: redis-desktop-manager
-version: 2019
+version: 2020
 version-script: cat $SNAPCRAFT_STAGE/version
 summary: Redis Desktop Manager
 description: Cross-platform GUI management tool for Redis
@@ -37,7 +37,7 @@ parts:
   application:
     plugin: qmake-rdm
     source: https://github.com/uglide/RedisDesktopManager.git
-    source-branch: '2019'
+    source-branch: '2020'
     after: [qt, desktop-gtk3, gcc7, botan]
     build-packages:
      - python3
@@ -49,15 +49,16 @@ parts:
     project-files: 
      - rdm.pro
     qmake-binary: $SNAPCRAFT_STAGE/opt/qt5/bin/qmake
+    options:
+     - VERSION="$(git describe --abbrev=0 --tags)-$(git rev-parse --short HEAD)"
     override-build: |
       cd ../src
-      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1TUm0f22tsxHs-5eitmQph3bO-LCDZ5Oc" && unzip -o deps.zip && popd'
+      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1h6Q-soYk1byAupwD10Vvr3GqZsr2V29m" && unzip -o deps.zip && popd'
       bash -c 'pushd ./src && $SNAPCRAFT_STAGE/opt/qt5/bin/lrelease rdm.pro && popd'
       sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
       export RDM_VERSION="$(git describe --abbrev=0 --tags)-$(git rev-parse --short HEAD)"
       echo "App version: $RDM_VERSION"
-      echo $RDM_VERSION > $SNAPCRAFT_STAGE/version
-      python build/utils/set_version.py $RDM_VERSION > src/version.h
+      echo $RDM_VERSION > $SNAPCRAFT_STAGE/version      
       cd ../build
       snapcraftctl build
       mkdir -p ../install/opt/redis-desktop-manager/lib/plugins
@@ -79,7 +80,7 @@ parts:
     requirements: $SNAPCRAFT_PART_SRC/../../application/src/src/py/requirements.txt
   qt:
     plugin: qtbuilder
-    qt-version: 5.9.8
+    qt-version: 5.13.2
     qt-source-git: https://code.qt.io/qt/qt5.git
     qt-submodules:
       - qtbase
