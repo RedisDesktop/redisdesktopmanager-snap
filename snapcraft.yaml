@@ -50,7 +50,7 @@ parts:
      - rdm.pro
     qmake-binary: $SNAPCRAFT_STAGE/opt/qt5/bin/qmake
     options:
-     - VERSION="$(git describe --abbrev=0 --tags)+$(git rev-parse --short HEAD)"
+     - VERSION="$(git describe --abbrev=0 --tags)"
     override-build: |
       cd ../src
       bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1h6Q-soYk1byAupwD10Vvr3GqZsr2V29m" && unzip -o deps.zip && popd'
