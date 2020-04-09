@@ -85,10 +85,12 @@ parts:
     qt-submodules:
       - qtbase
       - qtimageformats
+      - qtxmlpatterns
       - qtcharts
       - qtdeclarative
       - qtquickcontrols
       - qtquickcontrols2
+      - qtgraphicaleffects
       - qtsvg
       - qttools
     environment:
