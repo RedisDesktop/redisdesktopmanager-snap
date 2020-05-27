@@ -77,8 +77,6 @@ class QmakePlugin(snapcraft.BasePlugin):
             'default': [],
         }
 
-        schema.pop("required")
-
         return schema
 
     @classmethod
@@ -122,7 +120,8 @@ class QmakePlugin(snapcraft.BasePlugin):
         self.run(["make", "install", "INSTALL_ROOT=" + self.installdir], env=env)
 
     def _extra_config(self):
-        extra_config = []
+        env = os.environ.copy()
+        extra_config = ['VERSION=%s' % env['SNAP_VERSION']]
 
         for root in [self.installdir, self.project.stage_dir]:
             paths = common.get_library_paths(root, self.project.arch_triplet)

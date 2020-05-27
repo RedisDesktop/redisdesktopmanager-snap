@@ -100,7 +100,7 @@ class QtBuilderPlugin(make.MakePlugin):
 
         schema['required'].append('qt-source-git')
 
-        schema['build-properties'].append('configflags')
+        #schema['build-attributes'].append('configflags')
 
         return schema
 

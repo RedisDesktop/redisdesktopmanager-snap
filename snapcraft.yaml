@@ -1,8 +1,8 @@
 name: redis-desktop-manager
-version: 2020
-version-script: cat $SNAPCRAFT_STAGE/version
+adopt-info: application
 summary: Redis Desktop Manager
 description: Cross-platform GUI management tool for Redis
+base: core18
 
 grade: stable
 confinement: strict
@@ -29,6 +29,8 @@ apps:
      - desktop-legacy
      - ssh-keys     
      - dot-rdm      
+    extensions:
+     - gnome-3-28   
     environment:
       DISABLE_WAYLAND: 1
       WAYLAND_DISPLAY: no-display
@@ -38,7 +40,7 @@ parts:
     plugin: qmake-rdm
     source: https://github.com/uglide/RedisDesktopManager.git
     source-branch: '2020'
-    after: [qt, desktop-gtk3, gcc7, botan]
+    after: [qt, botan]
     build-packages:
      - python3
      - git
@@ -49,16 +51,14 @@ parts:
     project-files: 
      - rdm.pro
     qmake-binary: $SNAPCRAFT_STAGE/opt/qt5/bin/qmake
-    options:
-     - VERSION="$(git describe --abbrev=0 --tags)"
     override-build: |
       cd ../src
-      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1h6Q-soYk1byAupwD10Vvr3GqZsr2V29m" && unzip -o deps.zip && popd'
+      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1mcROyZCpno9AMujMHhjqW9whMFbSay7w" && unzip -o deps.zip && popd'
       bash -c 'pushd ./src && $SNAPCRAFT_STAGE/opt/qt5/bin/lrelease rdm.pro && popd'
       sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
       export RDM_VERSION="$(git describe --abbrev=0 --tags)+$(git rev-parse --short HEAD)"
       echo "App version: $RDM_VERSION"
-      echo $RDM_VERSION > $SNAPCRAFT_STAGE/version      
+      snapcraftctl set-version "$RDM_VERSION"      
       cd ../build
       snapcraftctl build
       mkdir -p ../install/opt/redis-desktop-manager/lib/plugins
@@ -68,20 +68,21 @@ parts:
     build-packages:
       - python
     source: https://github.com/randombit/botan.git
+    source-commit: 9fc0ad1e4ecc3725ee654ea51c9ee6bfae1537f8
     override-build: |
-      export CC=gcc-5
-      export CXX=g++-5
       python configure.py --prefix=/usr
       snapcraftctl build
   formatters:    
     source: . 
     plugin: python
     python-version: python3
-    requirements: $SNAPCRAFT_PART_SRC/../../application/src/src/py/requirements.txt
-  qt:
+    requirements: 
+      - $SNAPCRAFT_PART_SRC/../../application/src/src/py/requirements.txt
+  qt:   
     plugin: qtbuilder
     qt-version: 5.13.2
     qt-source-git: https://code.qt.io/qt/qt5.git
+    source: .
     qt-submodules:
       - qtbase
       - qtimageformats
@@ -93,11 +94,6 @@ parts:
       - qtgraphicaleffects
       - qtsvg
       - qttools
-    environment:
-      - CC: gcc-7
-      - CXX: g++-7
-      - QMAKE_CC: gcc-7
-      - QMAKE_CXX: g++-7
     build-packages:
       - libdbusmenu-glib-dev
       - libffi-dev
@@ -154,28 +150,4 @@ parts:
       - python-xcbgen
     configflags:
       - --disable-x11
-    prime: [-./*]
-  gcc7:
-    plugin: nil
-    build-packages:
-      - libmpc-dev
-      - libcloog-ppl-dev
-    override-pull: |
-      echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu xenial main" | \
-            sudo tee /etc/apt/sources.list.d/ubuntu-toolchain-r.list
-      sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60C317803A41BA51845E371A1E9377A2BA9EF27F
-      sudo apt-get update \
-        -o Dir::Etc::sourcelist="sources.list.d/ubuntu-toolchain-r.list" \
-        -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
-      snapcraftctl pull
-    override-build: |
-      sudo apt install gcc-7 g++-7 -o Debug::pkgProblemResolver=yes --no-install-recommends -y
-      sudo apt-mark auto gcc-7 g++-7
-      sudo rm -f /etc/apt/sources.list.d/ubuntu-toolchain-r.list
-      sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 \
-                         --slave /usr/bin/g++ g++ /usr/bin/g++-7 
-      sudo update-alternatives --config gcc
-      gcc --version
-      g++ --version
-      snapcraftctl build
     prime: [-./*]
