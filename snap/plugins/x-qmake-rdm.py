@@ -120,8 +120,7 @@ class QmakePlugin(snapcraft.BasePlugin):
         self.run(["make", "install", "INSTALL_ROOT=" + self.installdir], env=env)
 
     def _extra_config(self):
-        env = os.environ.copy()
-        extra_config = ['VERSION=%s' % env['SNAP_VERSION']]
+        extra_config = []
 
         for root in [self.installdir, self.project.stage_dir]:
             paths = common.get_library_paths(root, self.project.arch_triplet)
