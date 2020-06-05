@@ -7,6 +7,9 @@ base: core18
 grade: stable
 confinement: strict
 
+architectures:
+  - build-on: amd64
+
 plugs:
   dot-rdm:       
     interface: personal-files
