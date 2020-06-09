@@ -80,8 +80,15 @@ parts:
     source: . 
     plugin: python
     python-version: python3
-    requirements: 
-      - $SNAPCRAFT_PART_SRC/../../application/src/src/py/requirements.txt
+    python-packages: 
+      - bitstring
+      - cbor
+      - msgpack
+      - git+https://github.com/mrnom/phpserialize.git#egg=phpserialize
+      - rdbtools
+      - python-lzf
+      - numpy
+      - pandas
   qt:   
     plugin: qtbuilder
     qt-version: 5.13.2
