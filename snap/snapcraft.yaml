@@ -40,7 +40,7 @@ apps:
       QTCOMPOSE: $SNAP/usr/share/X11/locale     
 parts:
   application:
-    plugin: qmake-rdm
+    plugin: rdm
     source: https://github.com/uglide/RedisDesktopManager.git
     source-branch: '2020'
     after: [qt, botan]

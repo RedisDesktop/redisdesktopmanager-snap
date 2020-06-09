@@ -17,9 +17,9 @@
 
 import os
 import shutil
-import snapcraft
 
 from snapcraft.plugins import make
+
 
 class QtBuilderPlugin(make.MakePlugin):
 
@@ -126,20 +126,22 @@ class QtBuilderPlugin(make.MakePlugin):
             else:
                 self.options.source_branch = '.'.join(
                     self.options.qt_version.split('.')[:-1])
-
+    
+    def clean_pull(self):
+        shutil.rmtree(self.sourcedir, ignore_errors=True)
 
     def pull(self):
-        if not os.path.exists(os.path.join(self.sourcedir, '.git')) or \
-           not os.path.exists(os.path.join(self.sourcedir, 'init-repository')):
-            shutil.rmtree(self.sourcedir, ignore_errors=True)
-            command = 'git clone {} {}'.format(
-                self.options.qt_source_git, self.sourcedir).split()
-            if self.options.source_branch:
-                command.extend(['--branch', str(self.options.source_branch)])
-            if self.options.source_depth:
-                command.extend(['--depth', str(self.options.source_depth)])
+        #if not os.path.exists(os.path.join(self.sourcedir, '.git')) or \
+        #   not os.path.exists(os.path.join(self.sourcedir, 'init-repository')):
+        shutil.rmtree(self.sourcedir, ignore_errors=True)
+        command = 'git clone {} {}'.format(
+            self.options.qt_source_git, self.sourcedir).split()
+        if self.options.source_branch:
+            command.extend(['--branch', str(self.options.source_branch)])
+        if self.options.source_depth:
+            command.extend(['--depth', str(self.options.source_depth)])
 
-            self.run(command)
+        self.run(command)
 
         command = 'perl init-repository --branch -f'.split()
         if len(self.options.qt_submodules):
