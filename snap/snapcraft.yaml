@@ -20,6 +20,19 @@ apps:
   rdm:
     command: desktop-launch $SNAP/opt/redis-desktop-manager/rdm --settings-dir $SNAP_USER_COMMON
     desktop: usr/share/applications/rdm.desktop
+    environment:
+      DISABLE_WAYLAND:  1
+      TMPDIR:           $XDG_RUNTIME_DIR
+      XLOCALEDIR: '$SNAP/usr/share/X11/locale'
+      LOCPATH: '$SNAP/usr/lib/locale'
+      GTK_PATH: $SNAP/lib/gtk-2.0
+      GTK_DATA_PREFIX: $SNAP
+      XDG_DATA_DIRS: $SNAP/share:$XDG_DATA_DIRS
+      XDG_CONFIG_HOME: '$HOME/.config'
+      XKB_CONFIG_ROOT: '$SNAP/usr/share/X11/xkb'
+      XDG_CONFIG_DIRS: '$SNAP/etc/xdg:$XDG_CONFIG_DIRS'
+      XDG_DATA_HOME: '$SNAP/usr/share'
+      DISABLE_WAYLAND: '1'
     plugs: 
      - home
      - unity7
