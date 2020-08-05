@@ -146,7 +146,6 @@ parts:
       - -qt-libjpeg
       - -qt-harfbuzz
       - -qt-pcre
-      - -qt-xcb
       - -xkbcommon
       - -no-opengl
       - -fontconfig
