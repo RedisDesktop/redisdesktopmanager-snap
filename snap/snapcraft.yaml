@@ -101,7 +101,7 @@ parts:
       - pandas
   qt:   
     plugin: qtbuilder
-    qt-version: 5.13.2
+    qt-version: 5.15.0
     qt-source-git: https://code.qt.io/qt/qt5.git
     source: .
     qt-submodules:
