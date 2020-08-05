@@ -66,7 +66,7 @@ parts:
     qmake-binary: $SNAPCRAFT_STAGE/opt/qt5/bin/qmake
     override-build: |
       cd ../src
-      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1NS11hJtct7b_3QNrAziBghBR_fSiScFZ" && unzip -o deps.zip && popd'
+      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1q3DU0xDtJbjrDmFXraLOrLUaP24HdYXM" && unzip -o deps.zip && popd'
       bash -c 'pushd ./src && $SNAPCRAFT_STAGE/opt/qt5/bin/lrelease rdm.pro && popd'
       sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
       export RDM_VERSION="$(git describe --abbrev=0 --tags)+$(git rev-parse --short HEAD)"
@@ -82,7 +82,7 @@ parts:
     build-packages:
       - python
     source: https://github.com/randombit/botan.git
-    source-commit: 9fc0ad1e4ecc3725ee654ea51c9ee6bfae1537f8
+    source-commit: 3ed6eaa3c1236aed844f5475e2df8b89b3286ac4
     override-build: |
       python configure.py --prefix=/usr
       snapcraftctl build
