@@ -60,6 +60,17 @@ parts:
      - virtualenv
      - wget
      - unzip
+    stage-packages:
+     - libxcb-icccm4
+     - libxcb-image0
+     - libxcb-keysyms1
+     - libxcb-randr0
+     - libxcb-render-util0
+     - libxcb-shape0
+     - libxcb-util1
+     - libxcb-xinerama0
+     - libxcb-xkb1
+     - libxkbcommon-x11-0
     source-subdir: src
     project-files: 
      - rdm.pro
@@ -130,6 +141,10 @@ parts:
       - libxcb-util0-dev
       - libxcb-xfixes0-dev
       - libxcb1-dev
+      - libxcb-xinerama0
+      - libxcb-xinerama0-dev
+      - libxkbcommon-dev
+      - libxkbcommon-x11-dev  
       - libxrender-dev
       - libfontconfig1-dev
       - cmake
@@ -146,7 +161,11 @@ parts:
       - -qt-libjpeg
       - -qt-harfbuzz
       - -qt-pcre
-      - -xkbcommon
+      - -xcb
+      - -xcb-xlib
+      - -feature-thread
+      - -feature-xkbcommon
+      - -bundled-xcb-xinput
       - -no-opengl
       - -fontconfig
       - -static
@@ -156,18 +175,4 @@ parts:
       - examples
       - -nomake
       - tests
-    after:
-      - libxkbcommon
-    prime: [-./*]
-  libxkbcommon:
-    source: https://github.com/xkbcommon/libxkbcommon.git
-    source-depth: 1
-    source-tag: xkbcommon-0.8.4
-    plugin: autotools
-    build-packages:
-      - xutils-dev
-      - bison
-      - python-xcbgen
-    configflags:
-      - --disable-x11
     prime: [-./*]
