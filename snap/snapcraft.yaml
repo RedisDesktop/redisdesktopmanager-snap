@@ -71,6 +71,7 @@ parts:
      - libxcb-xinerama0
      - libxcb-xkb1
      - libxkbcommon-x11-0
+     - libfontconfig1
     source-subdir: src
     project-files: 
      - rdm.pro
