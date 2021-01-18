@@ -55,7 +55,7 @@ parts:
   application:
     plugin: rdm
     source: https://github.com/uglide/RedisDesktopManager.git
-    source-branch: '2020'
+    source-branch: '2021'
     after: [qt, botan]
     build-packages:
      - python3
@@ -88,7 +88,7 @@ parts:
       export RDM_VERSION="$(git describe --abbrev=0 --tags)+$(git rev-parse --short HEAD)"
       echo "App version: $RDM_VERSION"
       snapcraftctl set-version "$RDM_VERSION"
-      sed -i "s/2020\.[[:digit:]]\.0\-dev/$RDM_VERSION/g" ./src/rdm.pro       
+      sed -i "s/2021\.[[:digit:]]\.0\-dev/$RDM_VERSION/g" ./src/rdm.pro       
       cd ../build
       snapcraftctl build
       mkdir -p ../install/opt/redis-desktop-manager/lib/plugins
