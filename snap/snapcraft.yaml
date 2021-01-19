@@ -82,7 +82,7 @@ parts:
     override-build: |
       cd ../src
       bash -c 'pushd ./3rdparty/lz4/build/cmake && cmake -DBUILD_STATIC_LIBS=true . && make -j2 && popd'
-      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1IpmeiLNSpG7en-Y5tgy9MNgRHPtemHEV" && unzip -o deps.zip && popd'
+      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://docs.google.com/uc?export=download&id=1RyVpX-rdLQQvpnPsW-82elSK6Epu18O2" && unzip -o deps.zip && popd'
       bash -c 'pushd ./src && $SNAPCRAFT_STAGE/opt/qt5/bin/lrelease rdm.pro && popd'
       sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
       export RDM_VERSION="$(git describe --abbrev=0 --tags)+$(git rev-parse --short HEAD)"
