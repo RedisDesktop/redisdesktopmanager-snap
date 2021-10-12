@@ -19,25 +19,22 @@ plugs:
     interface: personal-files
     read:
      - $HOME/.rdm
-
+  gtk-3-themes:
+    interface: content
+    target: $SNAP/share/themes
+    default-provider: gtk-common-themes
+  icon-themes:
+    interface: content
+    target: $SNAP/share/icons
+    default-provider: gtk-common-themes
+  sound-themes:
+    interface: content
+    target: $SNAP/share/sounds
+    default-provider: gtk-common-themes
 apps:
   rdm:
     command: bin/desktop-launch $SNAP/opt/redis-desktop-manager/rdm --settings-dir $SNAP_USER_COMMON
     desktop: usr/share/applications/rdm.desktop
-    environment:
-      TMPDIR: $XDG_RUNTIME_DIR
-      XLOCALEDIR: '$SNAP/usr/share/X11/locale'
-      LOCPATH: '$SNAP/usr/lib/locale'
-      GTK_PATH: $SNAP/lib/gtk-2.0
-      GTK_DATA_PREFIX: $SNAP
-      XDG_DATA_DIRS: $SNAP/share:$XDG_DATA_DIRS
-      XDG_CONFIG_HOME: '$HOME/.config'
-      XKB_CONFIG_ROOT: '$SNAP/usr/share/X11/xkb'
-      XDG_CONFIG_DIRS: '$SNAP/etc/xdg:$XDG_CONFIG_DIRS'
-      XDG_DATA_HOME: '$SNAP/usr/share'      
-      DISABLE_WAYLAND: 1
-      WAYLAND_DISPLAY: no-display
-      QTCOMPOSE: $SNAP/usr/share/X11/locale 
     plugs: 
      - home
      - unity7
@@ -50,8 +47,9 @@ apps:
      - desktop-legacy
      - ssh-keys     
      - dot-rdm
+     - wayland
     extensions:
-     - gnome-3-38     
+     - gnome-3-38
 parts:
   application:
     plugin: make
@@ -85,11 +83,10 @@ parts:
     override-build: |
       cd ../src
       bash -c 'pushd ./src && lrelease rdm.pro && popd'
-      sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
       export RDM_VERSION="$(git describe --abbrev=0 --tags)+$(git rev-parse --short HEAD)"
       echo "App version: $RDM_VERSION"
       snapcraftctl set-version "$RDM_VERSION"
-      sed -i "s/2021\.[[:digit:]]\.0\-dev/$RDM_VERSION/g" ./src/rdm.pro      
+      sed -i "s/202[[:digit:]]\.[[:digit:]]\.0\-dev/$RDM_VERSION/g" ./src/rdm.pro      
       cd ../build
       bash -c 'pushd ./3rdparty/lz4/build/cmake && cmake -DBUILD_STATIC_LIBS=true . && make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT && popd'
       bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://rdm-dev.nyc3.digitaloceanspaces.com/snap/deps.zip?v2" && unzip -o deps.zip && cp $SNAPCRAFT_STAGE/usr/lib/libbotan-2.a . && popd'
@@ -106,6 +103,8 @@ parts:
   formatters:    
     source: . 
     plugin: python
+    stage-packages:
+    - python3.8
     python-packages: 
       - bitstring
       - cbor
@@ -115,7 +114,7 @@ parts:
       - python-lzf
       - numpy
       - pandas
-      - --target=$SNAPCRAFT_PART_INSTALL/usr/lib/python3.8/site-packages
+      - --target=$SNAPCRAFT_PART_INSTALL/opt/redis-desktop-manager/
   qt:   
     plugin: nil
     override-pull: |
