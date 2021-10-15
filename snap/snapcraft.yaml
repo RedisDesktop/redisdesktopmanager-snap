@@ -101,6 +101,10 @@ parts:
     override-build: |
       python configure.py --prefix=/usr
       snapcraftctl build
+    prime:
+      - -./usr/include
+      - -./usr/bin
+      - -./usr/lib/*.a
   formatters:    
     source: . 
     plugin: nil
@@ -225,6 +229,22 @@ parts:
        
        make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
        make INSTALL_ROOT="$SNAPCRAFT_PART_INSTALL" install
+    prime:
+      - -./usr/include
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/cmake
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/mkspecs
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/plugins/qmltooling
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/plugins/sqldrivers
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/plugins/designer
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.a
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.la
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.prl
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libQt5Designer*
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libQt5DesignerComponents*
+      - -./usr/lib/qt5
+      - -./usr/lib/*.a
+      - -./usr/share
   desktop-qt5:
     source: https://github.com/desktop-app/snapcraft-desktop-helpers.git
     source-subdir: qt
