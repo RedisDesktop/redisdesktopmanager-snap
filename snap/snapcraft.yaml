@@ -58,6 +58,7 @@ parts:
     after: [qt, botan, desktop-qt5]
     build-packages:
      - python3
+     - python3-dev
      - git
      - virtualenv
      - wget
