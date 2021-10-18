@@ -87,11 +87,11 @@ parts:
       export RDM_VERSION="$(git describe --abbrev=0 --tags)+$(git rev-parse --short HEAD)"
       echo "App version: $RDM_VERSION"
       snapcraftctl set-version "$RDM_VERSION"
-      sed -i "s/202[[:digit:]]\.[[:digit:]]\.0\-dev/$RDM_VERSION/g" ./src/rdm.pro      
       cd ../build
+      sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
       bash -c 'pushd ./3rdparty/lz4/build/cmake && cmake -DBUILD_STATIC_LIBS=true . && make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT && popd'
       bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://rdm-dev.nyc3.digitaloceanspaces.com/snap/deps.zip?v2" && unzip -o deps.zip && cp $SNAPCRAFT_STAGE/usr/lib/libbotan-2.a . && popd'
-      bash -c 'pushd ./src && qmake rdm.pro && make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT && make install INSTALL_ROOT=${SNAPCRAFT_PART_INSTALL} && popd'
+      bash -c 'pushd ./src && qmake rdm.pro VERSION="$RDM_VERSION" && make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT && make install INSTALL_ROOT=${SNAPCRAFT_PART_INSTALL} && popd'
   botan:
     plugin: make
     build-packages:
