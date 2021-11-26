@@ -90,7 +90,10 @@ parts:
       cd ../build
       sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
       bash -c 'pushd ./3rdparty/lz4/build/cmake && cmake -DBUILD_STATIC_LIBS=true . && make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT && popd'
-      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://rdm-dev.nyc3.digitaloceanspaces.com/snap/deps.zip?v2" && unzip -o deps.zip && cp $SNAPCRAFT_STAGE/usr/lib/libbotan-2.a . && popd'
+      bash -c 'pushd ./3rdparty/zstd/build/cmake && cmake -DZSTD_BUILD_PROGRAMS=OFF -DZSTD_BUILD_SHARED=OFF . && make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT && popd'
+      bash -c 'pushd ./3rdparty/snappy && cmake -DSNAPPY_BUILD_TESTS=OFF -DSNAPPY_BUILD_BENCHMARKS=OFF . && make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT && popd'
+      bash -c 'pushd ./3rdparty/brotli && cmake -DBUILD_TESTING=OFF . && make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT && popd'
+      bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://rdm-dev.nyc3.digitaloceanspaces.com/snap/deps.zip?v3" && unzip -o deps.zip && cp $SNAPCRAFT_STAGE/usr/lib/libbotan-2.a . && popd'
       bash -c 'pushd ./src && qmake rdm.pro VERSION="$RDM_VERSION" && make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT && make install INSTALL_ROOT=${SNAPCRAFT_PART_INSTALL} && popd'
   botan:
     plugin: make
