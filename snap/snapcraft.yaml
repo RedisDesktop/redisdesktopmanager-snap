@@ -81,10 +81,10 @@ parts:
      - libxkbcommon-x11-0
      - libfontconfig1
      - ibus
-     - liblz4
-     - libzstd
-     - libbrotli
-     - libsnappy
+     - liblz4-1
+     - libzstd1
+     - libbrotli1
+     - libsnappy1v5
     source-subdir: src
     build-environment:
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$LD_LIBRARY_PATH
