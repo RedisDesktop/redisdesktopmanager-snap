@@ -1,6 +1,6 @@
 name: redis-desktop-manager
 adopt-info: application
-summary: RDM - GUI for Redis ®
+summary: RESP.app - GUI for Redis ® (formerly RedisDesktopManager)
 description: Cross-platform GUI management tool for Redis
 
 base: core20
@@ -32,9 +32,9 @@ plugs:
     target: $SNAP/share/sounds
     default-provider: gtk-common-themes
 apps:
-  rdm:
-    command: bin/desktop-launch $SNAP/opt/redis-desktop-manager/rdm --settings-dir $SNAP_USER_COMMON
-    desktop: usr/share/applications/rdm.desktop
+  resp:
+    command: bin/desktop-launch $SNAP/opt/resp_app/resp --settings-dir $SNAP_USER_COMMON
+    desktop: usr/share/applications/resp.desktop
     plugs: 
      - home
      - unity7
@@ -54,7 +54,7 @@ parts:
   application:
     plugin: make
     source: https://github.com/uglide/RedisDesktopManager.git
-    source-branch: '2021'
+    source-branch: '2022'
     after: [qt, botan, desktop-qt5]
     build-packages:
      - python3
@@ -91,14 +91,14 @@ parts:
       - PATH: $SNAPCRAFT_STAGE/usr/lib/qt5/bin:$PATH
     override-build: |
       cd ../src
-      bash -c 'pushd ./src && lrelease rdm.pro && popd'
-      export RDM_VERSION="$(git describe --abbrev=0 --tags)+$(git rev-parse --short HEAD)"
-      echo "App version: $RDM_VERSION"
-      snapcraftctl set-version "$RDM_VERSION"
+      bash -c 'pushd ./src && lrelease resp.pro && popd'
+      export APP_VERSION="$(git describe --abbrev=0 --tags)+$(git rev-parse --short HEAD)"
+      echo "App version: $APP_VERSION"
+      snapcraftctl set-version "$APP_VERSION"
       cd ../build
-      sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/rdm.png|g" src/resources/rdm.desktop
+      sed -i "s|^Icon=.*|Icon=\${SNAP}/usr/share/pixmaps/resp.png|g" src/resources/resp.desktop
       bash -c 'pushd ./3rdparty/qredisclient && wget -O deps.zip "https://rdm-dev.nyc3.digitaloceanspaces.com/snap/deps.zip?v3" && unzip -o deps.zip && cp $SNAPCRAFT_STAGE/usr/lib/libbotan-2.a . && popd'
-      bash -c 'pushd ./src && qmake rdm.pro VERSION="$RDM_VERSION" "SYSTEM_LZ4=1" "SYSTEM_ZSTD=1" "SYSTEM_SNAPPY=1" "SYSTEM_BROTLI=1" && make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT && make install INSTALL_ROOT=${SNAPCRAFT_PART_INSTALL} && popd'
+      bash -c 'pushd ./src && qmake resp.pro VERSION="$APP_VERSION" "SYSTEM_LZ4=1" "SYSTEM_ZSTD=1" "SYSTEM_SNAPPY=1" "SYSTEM_BROTLI=1" && make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT && make install INSTALL_ROOT=${SNAPCRAFT_PART_INSTALL} && popd'
   botan:
     plugin: make
     build-packages:
