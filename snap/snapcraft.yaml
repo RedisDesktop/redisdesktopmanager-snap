@@ -125,11 +125,13 @@ parts:
     override-pull: |
       QT=5_15_2
       git clone -b v5.15.2 --depth=1 git://code.qt.io/qt/qt5.git .
-      perl init-repository --module-subset=qtbase,qtimageformats,qtxmlpatterns,qtcharts,qtdeclarative,qtquickcontrols,\
+      perl init-repository --module-subset=qtbase,qtwayland,qtimageformats,qtxmlpatterns,qtcharts,qtdeclarative,qtquickcontrols,\
       qtquickcontrols2,qtgraphicaleffects,qtsvg,qttools
-      git submodule update qtbase  qtimageformats qtxmlpatterns qtcharts \
+      git submodule update qtbase qtwayland qtimageformats qtxmlpatterns qtcharts \
       	qtdeclarative qtquickcontrols qtquickcontrols2 qtgraphicaleffects qtsvg qttools      
     build-packages:
+      - libegl-dev
+      - libgl-dev  
       - libdbusmenu-glib-dev
       - libffi-dev
       - liblzma-dev
@@ -162,6 +164,7 @@ parts:
       - libxfixes-dev
       - libxkbcommon-dev
       - libxkbcommon-x11-dev
+      - libwayland-dev  
       - cmake
     stage-packages:
       - libdbus-1-3
@@ -196,6 +199,9 @@ parts:
       - libxcursor1
       - libxkbcommon0
       - libxkbcommon-x11-0
+      - libwayland-client0
+      - libwayland-cursor0
+      - libwayland-egl1  
       - zlib1g  
     override-build: |
       ./configure \
@@ -227,7 +233,10 @@ parts:
        -feature-thread \
        -feature-xkbcommon \
        -bundled-xcb-xinput \
-       -no-opengl \
+       -no-feature-xcb-sm \
+       -no-feature-xcomposite-egl \
+       -no-feature-xcomposite-glx \
+       -no-feature-wayland-server \
        -fontconfig \
        -dbus-runtime \
        -openssl-linked \
