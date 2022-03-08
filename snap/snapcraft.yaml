@@ -219,7 +219,6 @@ parts:
        -sysconfdir /etc/xdg \
        -examplesdir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/examples \
        -release \
-       -force-debug-info \
        -opensource \
        -confirm-license \
        -system-freetype \
